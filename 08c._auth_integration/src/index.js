@@ -30,7 +30,9 @@ const providerConfig = {
 const root = createRoot(document.getElementById('root'));
 root.render(
   <Auth0Provider
-    {...providerConfig}
+  domain={"https://rasmusorum.eu.auth0.com/login"}
+  clientId={"LlsrajTCsYlg8AcSFsdEMgVFuP5sbfuF"}
+  authorizationParams={{ redirect_uri: window.location.origin }}
   >
     <App />
   </Auth0Provider>,
