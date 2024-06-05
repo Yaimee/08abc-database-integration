@@ -13,8 +13,7 @@ const onRedirectCallback = (appState) => {
   );
 };
 
-// Please see https://auth0.github.io/auth0-react/interfaces/Auth0ProviderOptions.html
-// for a full list of the available properties on the provider
+// Get Auth0 configuration
 const config = getConfig();
 
 const providerConfig = {
@@ -29,11 +28,7 @@ const providerConfig = {
 
 const root = createRoot(document.getElementById('root'));
 root.render(
-  <Auth0Provider
-  domain={"https://rasmusorum.eu.auth0.com/login"}
-  clientId={"LlsrajTCsYlg8AcSFsdEMgVFuP5sbfuF"}
-  authorizationParams={{ redirect_uri: window.location.origin }}
-  >
+  <Auth0Provider {...providerConfig}>
     <App />
   </Auth0Provider>,
 );
