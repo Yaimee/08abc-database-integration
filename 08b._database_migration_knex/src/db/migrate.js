@@ -14,13 +14,16 @@ async function migrateTable(tableName, uniqueColumns) {
         .map(col => `${col} = EXCLUDED.${col}`)
         .join(', ');
 
-      await postgresDb.raw(
-        `INSERT INTO ${tableName} (${columns.join(', ')})
-         VALUES (${values.map((_, i) => `$${i + 1}`).join(', ')})
-         ON CONFLICT (${uniqueColumns.join(', ')})
-         DO UPDATE SET ${updateClause};`,
-        values
-      );
+      const valuePlaceholders = columns.map((_, i) => `$${i + 1}`).join(', ');
+
+      const insertQuery = `
+        INSERT INTO ${tableName} (${columns.join(', ')})
+        VALUES (${valuePlaceholders})
+        ON CONFLICT (${uniqueColumns.join(', ')})
+        DO UPDATE SET ${updateClause};
+      `;
+
+      await postgresDb.raw(insertQuery, values);
     }
 
     console.log(`Data inserted into ${tableName}`);
@@ -28,6 +31,9 @@ async function migrateTable(tableName, uniqueColumns) {
     console.error(`Error migrating table ${tableName}:`, error);
   }
 }
+
+
+
 
 async function migrate() {
   await migrateTable('customers', ['id']);
